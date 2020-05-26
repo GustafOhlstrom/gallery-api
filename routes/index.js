@@ -5,10 +5,11 @@ var router = express.Router();
 router.get('/', (req, res) => {
 	res.send({
 		status: 'success',
-		data: {
-			info: 'gallery API'
-		}
+		data: 'gallery API'
 	});
 });
+
+router.use('/albums', require('./albums'));
+router.use('/photos', require('./photos'))
 
 module.exports = router;

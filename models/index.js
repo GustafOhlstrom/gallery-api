@@ -12,6 +12,11 @@ const knex = require('knex')({
 
 const bookshelf = require('bookshelf')(knex);
 
+const models = {};
+models.Album = require('./Album')(bookshelf);
+models.Photo = require('./Photo')(bookshelf);
+
 module.exports = {
-    
+    bookshelf,
+	...models,
 };
