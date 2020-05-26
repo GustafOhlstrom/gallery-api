@@ -35,10 +35,17 @@ const store = async (req, res) => {
 		return;
 	}
 
-	const validData = matchedData(req);
+
+	const {album_id, ...validData} = matchedData(req);
 
 	try {
-		const photo = await new models.Photo(validData).save();
+		let photo = await new models.Photo(validData).save();
+	
+		if(album_id) {
+			await photo.albums().attach(album_id);
+			photo = await models.Photo.fetchById(photo.id, { withRelated: ['albums']});
+		}
+		
 		res.send({
 			status: 'success',
 			data: {
@@ -59,7 +66,7 @@ const store = async (req, res) => {
  * GET /:photoId
  */
 const show = async (req, res) => {
-	const photo = await models.Photo.fetchById(req.params.photoId, { require: false });
+	const photo = await models.Photo.fetchById(req.params.photoId, { require: false, withRelated: ['albums'] });
 	if (!photo) {
 		res.status(404).send({
 			status: 'fail',
