@@ -106,11 +106,28 @@ const update = async (req, res) => {
  * Destroy a specific resource
  * DELETE /:photoId
  */
-const destroy = (req, res) => {
-	res.status(405).send({
-		status: 'fail',
-		message: 'Method Not Allowed.',
-	});
+const destroy = async (req, res) => {
+	try {
+		const photo = await models.Photo.fetchById(req.params.photoId, { require: false, withRelated: ['albums'] });
+		if (!photo || photo.get("user_id") !== req.user.data.id) {
+			res.status(404).send({
+				status: 'fail',
+				data: 'Photo Not Found',
+			});
+			return;
+		}
+		
+		photo.destroy();
+		photo.albums().detach()
+		
+		res.sendStatus(204);
+	} catch (error) {
+		res.status(404).send({
+			status: 'fail',
+			data: 'Photo Not Found',
+		});
+		throw error;
+	}
 }
 
 module.exports = {
