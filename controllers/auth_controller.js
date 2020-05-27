@@ -81,7 +81,20 @@ const login = async (req, res) => {
 	});
 }
 
+/**
+ * Get token from HTTP headers
+ */
+const getTokenFromHeaders = (req) => {
+	if (!req.headers.authorization) return false;
+	
+	const [authType, token] = req.headers.authorization.split(' ');
+	
+	if (authType.toLowerCase() !== "bearer") return false;
+	return token;
+}
+
 module.exports = {
     register,
-    login
+	login,
+	getTokenFromHeaders
 }

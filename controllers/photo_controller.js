@@ -10,11 +10,19 @@ const { matchedData, validationResult } = require('express-validator');
  * GET /
  */
 const index = async (req, res) => {
-	const photos = await models.Photo.fetchAll();
+	const user = await models.User.fetchById(req.user.data.id, { require: false, withRelated: 'photos' });
+	if (!user) {
+		res.status(404).send({
+			status: 'fail',
+			data: 'User Not Found',
+		});
+		return;
+	}
 
+	const photos = user.related('photos');
 	res.send({
 		status: 'success',
-		data: {
+		data: { 
 			photos,
 		}
 	});
@@ -36,6 +44,7 @@ const store = async (req, res) => {
 
 
 	const {album_id, ...validData} = matchedData(req);
+	validData.user_id = req.user.data.id;
 
 	try {
 		let photo = await new models.Photo(validData).save();
@@ -66,7 +75,7 @@ const store = async (req, res) => {
  */
 const show = async (req, res) => {
 	const photo = await models.Photo.fetchById(req.params.photoId, { require: false, withRelated: ['albums'] });
-	if (!photo) {
+	if (!photo || photo.get("user_id") !== req.user.data.id) {
 		res.status(404).send({
 			status: 'fail',
 			data: 'Photo Not Found',
