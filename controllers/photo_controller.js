@@ -27,7 +27,6 @@ const index = async (req, res) => {
 const store = async (req, res) => {
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
-		console.log("Validation failed for creating a photo:", errors.array());
 		res.status(422).send({
 			status: 'fail',
 			data: errors.array(),
