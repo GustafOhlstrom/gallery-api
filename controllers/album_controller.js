@@ -123,7 +123,7 @@ const destroy = async (req, res) => {
 	} catch (error) {
 		res.status(500).send({
 			status: 'error',
-			data: 'Exception thrown in database when deleting profile.',
+			data: 'Exception thrown in database when deleting album.',
 		});
 		throw error;
 	}

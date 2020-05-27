@@ -3,9 +3,9 @@
  */
 
 const jwt = require('jsonwebtoken');
-const { getTokenFromHeaders } = require('../controllers/auth_controller');
+const { getTokenFromHeaders } = require('../auth_controller');
 
-const jwtToken = (req, res, next) => {
+const jwtTokenControl = (req, res, next) => {
 	const token = getTokenFromHeaders(req);
 	if (!token) {
 		res.status(401).send({
@@ -34,5 +34,5 @@ const jwtToken = (req, res, next) => {
 }
 
 module.exports = {
-	jwtToken,
+	jwtTokenControl,
 }

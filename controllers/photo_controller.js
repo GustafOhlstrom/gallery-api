@@ -116,15 +116,15 @@ const destroy = async (req, res) => {
 			});
 			return;
 		}
-		
+
 		photo.destroy();
 		photo.albums().detach()
 		
 		res.sendStatus(204);
 	} catch (error) {
-		res.status(404).send({
-			status: 'fail',
-			data: 'Photo Not Found',
+		res.status(500).send({
+			status: 'error',
+			data: 'Exception thrown in database when deleting photo.',
 		});
 		throw error;
 	}
