@@ -50,7 +50,7 @@ const store = async (req, res) => {
 	
 		if(photo_id) {
 			await album.photos().attach(photo_id);
-			album = await models.Album.fetchById(album.id, { withRelated: ['photos']});
+			album = await models.Album.fetchById(album.id, { withRelated: 'photos' });
 		}
 
 		res.send({
@@ -73,7 +73,7 @@ const store = async (req, res) => {
  * GET /:albumId
  */
 const show = async (req, res) => {
-	const album = await models.Album.fetchById(req.params.albumId, { require: false, withRelated: ['photos']});
+	const album = await models.Album.fetchById(req.params.albumId, { require: false, withRelated: 'photos' });
 	if (!album || album.get("user_id") !== req.user.data.id) {
 		res.status(404).send({
 			status: 'fail',
@@ -107,7 +107,7 @@ const update = async (req, res) => {
  */
 const destroy = async (req, res) => {
 	try {
-		const album = await models.Album.fetchById(req.params.albumId, { require: false});
+		const album = await models.Album.fetchById(req.params.albumId, { require: false });
 		if (!album || album.get("user_id") !== req.user.data.id) {
 			res.status(404).send({
 				status: 'fail',
