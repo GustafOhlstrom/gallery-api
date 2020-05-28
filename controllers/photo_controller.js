@@ -51,9 +51,23 @@ const store = async (req, res) => {
 
 	// Save photo to db and album relations if they exists
 	try {
-		let photo = await new models.Photo(validData).save();
-	
-		if(album_id) {
+		let photo;
+		if(!album_id) {
+			photo = await new models.Photo(validData).save();
+		// Check if all albums belongs to user and update all relations
+		} else {
+			for (let i = 0; i < album_id.length; i++) {
+				const album = await models.Album.fetchById(album_id[i], { require: false });
+				if(!album || album.get("user_id") !== req.user.data.id) {
+					res.status(404).send({
+						status: 'fail',
+						data: `No album with id ${album_id[i]} exists`,
+					});
+					return;
+				}
+			}
+
+			photo = await new models.Photo(validData).save();
 			await photo.albums().attach(album_id);
 			photo = await models.Photo.fetchById(photo.id, { withRelated: 'albums' });
 		}
@@ -126,14 +140,27 @@ const update = async (req, res) => {
 
 	// Save updated photo to db, if album relations exists remove old relations and save new
 	try {
-		await photo.save(validData);
-	
-		if(album_id) {
+		if(!album_id) {
+			await photo.save(validData);
+		// Check if all albums belongs to user and update all relations
+		} else {
+			for (let i = 0; i < album_id.length; i++) {
+				const album = await models.Album.fetchById(album_id[i], { require: false });
+				if(!album || album.get("user_id") !== req.user.data.id) {
+					res.status(404).send({
+						status: 'fail',
+						data: `No album with id ${album_id[i]} exists`,
+					});
+					return;
+				}
+			}
+
+			await photo.save(validData);
 			await photo.albums().detach()
 			await photo.albums().attach(album_id);
 			photo = await models.Photo.fetchById(photo.id, { withRelated: 'albums' });
 		}
-		
+
 		res.send({
 			status: 'success',
 			data: {
@@ -166,8 +193,8 @@ const destroy = async (req, res) => {
 		}
 
 		// Delete photo and all its relations
-		await photo.destroy();
 		await photo.albums().detach()
+		await photo.destroy();
 		
 		res.sendStatus(204);
 	} catch (error) {

@@ -51,9 +51,22 @@ const store = async (req, res) => {
 
 	// Save album to db and photo relations if they exists
 	try {
-		let album = await new models.Album(validData).save();
-	
-		if(photo_id) {
+		let album;
+		if(!photo_id) {
+			album = await new models.Album(validData).save();
+		// Check if all photos belongs to user and update all relations
+		} else {
+			for (let i = 0; i < photo_id.length; i++) {
+				const photo = await models.Photo.fetchById(photo_id[i], { require: false });
+				if(!photo || photo.get("user_id") !== req.user.data.id) {
+					res.status(404).send({
+						status: 'fail',
+						data: `No photo with id ${photo_id[i]} exists`,
+					});
+					return;
+				}
+			}
+			album = await new models.Album(validData).save();
 			await album.photos().attach(photo_id);
 			album = await models.Album.fetchById(album.id, { withRelated: 'photos' });
 		}
@@ -110,7 +123,7 @@ const update = async (req, res) => {
 		});
 		return;
 	}
-
+	
 	// Check if req data passed validation
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
@@ -126,9 +139,22 @@ const update = async (req, res) => {
 
 	// Save updated album to db, if photo relations exists remove old relations and save new
 	try {
-		await album.save(validData);
-	
-		if(photo_id) {
+		
+		if(!photo_id) {
+			await album.save(validData);
+		// Check if all photos belongs to user and update all relations
+		} else {
+			for (let i = 0; i < photo_id.length; i++) {
+				const photo = await models.Photo.fetchById(photo_id[i], { require: false });
+				if(!photo || photo.get("user_id") !== req.user.data.id) {
+					res.status(404).send({
+						status: 'fail',
+						data: `No photo with id ${photo_id[i]} exists`,
+					});
+					return;
+				}
+			}
+			await album.save(validData);
 			await album.photos().detach()
 			await album.photos().attach(photo_id);
 			album = await models.Album.fetchById(album.id, { withRelated: 'photos' });
@@ -166,8 +192,8 @@ const destroy = async (req, res) => {
 		}
 
 		// Delete album and all its relations 
-		await album.destroy();
 		await album.photos().detach()
+		await album.destroy();
 		
 		res.sendStatus(204);
 	} catch (error) {
