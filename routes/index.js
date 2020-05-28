@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
 router.use('/albums', auth.jwtTokenControl, require('./albums'));
 router.use('/photos', auth.jwtTokenControl, require('./photos'));
 
-router.post('/register', userValidationRules.createRules, authController.register);
 router.post('/login', userValidationRules.createRules, authController.login);
+router.post('/register', userValidationRules.createRules, authController.register);
 
 module.exports = router;

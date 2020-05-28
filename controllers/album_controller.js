@@ -10,6 +10,7 @@ const { matchedData, validationResult } = require('express-validator');
  * GET /
  */
 const index = async (req, res) => {
+	// Get user and related albums & check if user was found
 	const user = await models.User.fetchById(req.user.data.id, { require: false, withRelated: 'albums' });
 	if (!user) {
 		res.status(404).send({
@@ -19,6 +20,7 @@ const index = async (req, res) => {
 		return;
 	}
 
+	// Extract users albums and return them in a successful response
 	const albums = user.related('albums');
 	res.send({
 		status: 'success',
@@ -33,6 +35,7 @@ const index = async (req, res) => {
  * POST /
  */
 const store = async (req, res) => {
+	// Check if req data passed validation
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
 		res.status(422).send({
@@ -42,9 +45,11 @@ const store = async (req, res) => {
 		return;
 	}
 
+	// Extract validated data
 	const {photo_id, ...validData} = matchedData(req);
 	validData.user_id = req.user.data.id;
 
+	// Save album to db and photo relations if they exists
 	try {
 		let album = await new models.Album(validData).save();
 	
@@ -73,6 +78,7 @@ const store = async (req, res) => {
  * GET /:albumId
  */
 const show = async (req, res) => {
+	// Get album and check if exists and belongs to user
 	const album = await models.Album.fetchById(req.params.albumId, { require: false, withRelated: 'photos' });
 	if (!album || album.get("user_id") !== req.user.data.id) {
 		res.status(404).send({
@@ -107,6 +113,7 @@ const update = async (req, res) => {
  */
 const destroy = async (req, res) => {
 	try {
+		// Get album and check if exists and belongs to user
 		const album = await models.Album.fetchById(req.params.albumId, { require: false });
 		if (!album || album.get("user_id") !== req.user.data.id) {
 			res.status(404).send({
@@ -116,6 +123,7 @@ const destroy = async (req, res) => {
 			return;
 		}
 
+		// Delete album and all its relations 
 		album.destroy();
 		album.photos().detach()
 		

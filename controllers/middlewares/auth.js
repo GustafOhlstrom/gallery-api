@@ -5,7 +5,9 @@
 const jwt = require('jsonwebtoken');
 const { getTokenFromHeaders } = require('../auth_controller');
 
+// Check if user is trusted by verifying jwt token
 const jwtTokenControl = (req, res, next) => {
+	// Get and check if token exists
 	const token = getTokenFromHeaders(req);
 	if (!token) {
 		res.status(401).send({
@@ -27,7 +29,7 @@ const jwtTokenControl = (req, res, next) => {
 		throw err;
 	}
 
-	// attach payload to req.user
+	// Attach payload to req.user
 	req.user = payload;
 
 	next();

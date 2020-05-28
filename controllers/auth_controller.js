@@ -12,6 +12,7 @@ const jwt = require('jsonwebtoken');
  * POST /register
  */
 const register = async (req, res) => {
+	// Check if req data passed validation
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
 		res.status(422).send({
@@ -23,6 +24,7 @@ const register = async (req, res) => {
 
 	const validData = matchedData(req);
 
+	// Generate hash
 	try {
 		validData.password = await bcrypt.hash(validData.password, models.User.hashSaltRounds);
 
@@ -34,6 +36,7 @@ const register = async (req, res) => {
 		throw error;
 	}
 
+	// Save new user with hased password to database
 	try {
 		await new models.User(validData).save();
 		res.status(201).send({
@@ -55,6 +58,7 @@ const register = async (req, res) => {
  * POST /login
  */
 const login = async (req, res) => {
+	// Login and check if login was successful
 	const user = await models.User.login(req.body.email, req.body.password);
 	if (!user) {
 		res.status(401).send({
@@ -64,6 +68,7 @@ const login = async (req, res) => {
 		return;
 	}
 
+	// Construct payload
 	const payload = {
 		data: {
 			id: user.get('id'),
@@ -71,6 +76,7 @@ const login = async (req, res) => {
 		},
 	};
 
+	// Sign payload and get access token
 	const access_token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_LIFETIME || '1h' });
 
 	res.send({
@@ -82,7 +88,8 @@ const login = async (req, res) => {
 }
 
 /**
- * Get token from HTTP headers
+ * Get token from HTTP headers 
+ * Check that the autorization is bearer and return token
  */
 const getTokenFromHeaders = (req) => {
 	if (!req.headers.authorization) return false;
