@@ -7,12 +7,7 @@ const models = require('../models');
 
 const createRules = [
 	body('title').trim().isLength({ min: 1 }),
-    body('photo_id').optional().isArray().custom(async values => {
-		for (let i = 0; i < values.length; i++) {
-			const photo = await models.Photo.fetchById(values[i], { require: false });
-			if(!photo) return Promise.reject(`No photo with id ${values[i]} exists`)
-		}
-	}),
+    body('photo_id').optional().isArray(),
 ];
 
 const updateRules = [
