@@ -15,12 +15,12 @@ const res200 = (res, dataKey, dataValue) => {
 }
 
 /**
- * Response with 200 ok success
+ * Response with 500 internal server error
  */
 const res500 = (res) => {
 	res.status(500).send({
 		status: 'error',
-		message: 'Exception thrown in database when creating a new album.',
+		message: 'Exception thrown in database when creating.',
 	});
 }
 

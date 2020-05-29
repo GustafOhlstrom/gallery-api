@@ -18,7 +18,7 @@ const fetchPhoto = async (req, res, relation) => {
 			status: 'fail',
 			data: 'Photo Not Found',
 		});
-		return;
+		return false;
 	}
 	return photo;
 }
@@ -34,7 +34,7 @@ const checkValidation = (req, res) => {
 			status: 'fail',
 			data: errors.array(),
 		});
-		return;
+		return false;
 	}
 
 	// Return extracted validated data
@@ -52,9 +52,10 @@ const validateRelatedAlbums = async (req, res, album_id) => {
 				status: 'fail',
 				data: `No album with id ${album_id[i]} exists`,
 			});
-			return;
+			return false;
 		}
 	}
+	return true;
 }
 
 
@@ -63,7 +64,8 @@ const validateRelatedAlbums = async (req, res, album_id) => {
  * GET /
  */
 const index = async (req, res) => {
-	const user = await fetchUser(req, res, 'photos')
+	const user = await fetchUser(req, res, 'photos');
+	if(!user) return
 	// Extract users photos and return them in a successful response
 	const photos = user.related('photos');
 	res200(res, 'photos', photos);
@@ -75,7 +77,9 @@ const index = async (req, res) => {
  */
 const store = async (req, res) => {
 	// Check and extract validated data
-	const {album_id, ...validData} = checkValidation(req, res)
+	const validatedData = checkValidation(req, res);
+	if(!validatedData) return
+	const {album_id, ...validData} = validatedData
 	validData.user_id = req.user.data.id;
 
 	// Save photo to db and album relations if they exists
@@ -85,7 +89,7 @@ const store = async (req, res) => {
 			photo = await new models.Photo(validData).save();
 		// Check if all albums exists and belongs to user and update all relations
 		} else {
-			await validateRelatedAlbums(req, res, album_id);
+			if(!await validateRelatedAlbums(req, res, album_id)) return
 
 			photo = await new models.Photo(validData).save();
 			await photo.albums().attach(album_id);
@@ -105,6 +109,7 @@ const store = async (req, res) => {
  */
 const show = async (req, res) => {
 	const photo = await fetchPhoto(req, res, 'albums');
+	if(!photo) return
 	res200(res, 'photo', photo);
 }
 
@@ -114,9 +119,12 @@ const show = async (req, res) => {
  */
 const update = async (req, res) => {
 	let photo = await fetchPhoto(req, res, 'albums');
+	if(!photo) return
 
 	// Check and extract validated data
-	const {album_id, ...validData} = checkValidation(req, res)
+	const validatedData = checkValidation(req, res);
+	if(!validatedData) return
+	const {album_id, ...validData} = validatedData
 
 	// Save updated photo to db, if album relations exists remove old relations and save new
 	try {
@@ -124,7 +132,7 @@ const update = async (req, res) => {
 			await photo.save(validData);
 		// Check if all albums exists and belongs to user and update all relations
 		} else {
-			await validateRelatedAlbums(req, res, album_id);
+			if(!await validateRelatedAlbums(req, res, album_id)) return
 
 			await photo.save(validData);
 			await photo.albums().detach()
@@ -147,6 +155,7 @@ const update = async (req, res) => {
 const destroy = async (req, res) => {
 	try {
 		const photo = await fetchPhoto(req, res);
+		if(!photo) return
 
 		// Delete photo and all its relations
 		await photo.albums().detach()

@@ -15,7 +15,7 @@ const fetchUser = async (req, res, relation) => {
 			status: 'fail',
 			data: 'User Not Found',
 		});
-		return;
+		return false;
     }
     return user
 }
