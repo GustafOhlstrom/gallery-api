@@ -1,0 +1,454 @@
+{
+	"info": {
+		"_postman_id": "7cc15585-35bf-4ab9-8c1a-3dcd18290fd6",
+		"name": "Gallery",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Photos",
+			"item": [
+				{
+					"name": "GET /photos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{gallery-user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://fed19-gallery.herokuapp.com/photos",
+							"protocol": "https",
+							"host": [
+								"fed19-gallery",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"photos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /photos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{gallery-user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"Milky way\",\n\t\"url\": \"https://images.unsplash.com/photo-1505506874110-6a7a69069a08?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80\",\n\t\"comment\": \"candy bar?\",\n\t\"album_id\": [21]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://fed19-gallery.herokuapp.com/photos",
+							"protocol": "https",
+							"host": [
+								"fed19-gallery",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"photos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /photos/id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{gallery-user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://fed19-gallery.herokuapp.com/photos/71",
+							"protocol": "https",
+							"host": [
+								"fed19-gallery",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"photos",
+								"71"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /photos/id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{gallery-user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"Milky way 2.0\",\n\t\"url\": \"https://images.unsplash.com/photo-1505506874110-6a7a69069a08?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80\",\n\t\"comment\": \"candy bar?\",\n\t\"album_id\": [21]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://fed19-gallery.herokuapp.com/photos/71",
+							"protocol": "https",
+							"host": [
+								"fed19-gallery",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"photos",
+								"71"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE /photos/id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{gallery-user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://fed19-gallery.herokuapp.com/photos/71",
+							"protocol": "https",
+							"host": [
+								"fed19-gallery",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"photos",
+								"71"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Albums",
+			"item": [
+				{
+					"name": "GET /albums",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{gallery-user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://fed19-gallery.herokuapp.com/albums",
+							"protocol": "https",
+							"host": [
+								"fed19-gallery",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"albums"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /albums",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{gallery-user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"Space\",\n\t\"photo_id\": [21,31,41]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://fed19-gallery.herokuapp.com/albums",
+							"protocol": "https",
+							"host": [
+								"fed19-gallery",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"albums"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /albums/id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{gallery-user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://fed19-gallery.herokuapp.com/albums/41",
+							"protocol": "https",
+							"host": [
+								"fed19-gallery",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"albums",
+								"41"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /albums/id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{gallery-user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\": \"Space 2.0\",\n\t\"photo_id\": [21, 31, 41]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://fed19-gallery.herokuapp.com/albums/41",
+							"protocol": "https",
+							"host": [
+								"fed19-gallery",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"albums",
+								"41"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE /albums/id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{gallery-user}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://fed19-gallery.herokuapp.com/albums/41",
+							"protocol": "https",
+							"host": [
+								"fed19-gallery",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"albums",
+								"41"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Register",
+			"item": [
+				{
+					"name": "POST /register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"Hero@ku.com\",\r\n    \"password\": \"notpassword\",\r\n    \"first_name\": \"Hero\",\r\n    \"last_name\": \"Ku\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://fed19-gallery.herokuapp.com/register",
+							"protocol": "https",
+							"host": [
+								"fed19-gallery",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "POST /login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"Hero@ku.com\",\r\n    \"password\": \"notpassword\",\r\n    \r\n    \"users-cheat-sheat\": {\r\n    \t\"1\": {\r\n    \t\t\"email\": \"jn@badcameraphotography.com\",\r\n    \t\t\"password\": \"omg-smile\"\r\n    \t},\r\n    \t\"2\": {\r\n    \t\t\"email\": \"gustaf@ohlstrom.com\",\r\n\t\t\t\"password\": \"letmein\"\r\n    \t},\r\n    \t\"3\": {\r\n    \t\t\"email\": \"Hero@ku.com\",\r\n    \t\t\"password\": \"notpassword\"\r\n    \t}\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://fed19-gallery.herokuapp.com/login",
+							"protocol": "https",
+							"host": [
+								"fed19-gallery",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "GET /",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://fed19-gallery.herokuapp.com/",
+					"protocol": "https",
+					"host": [
+						"fed19-gallery",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
