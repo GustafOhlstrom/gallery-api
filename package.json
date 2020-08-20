@@ -7,7 +7,7 @@
 		"dev": "SET DEBUG=gallery:* && nodemon --inspect ./bin/www"
 	},
 	"dependencies": {
-		"bcrypt": "^4.0.1",
+		"bcrypt": "^5.0.0",
 		"bookshelf": "^1.1.1",
 		"debug": "~2.6.9",
 		"dotenv": "^8.2.0",
